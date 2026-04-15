@@ -57,6 +57,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
     private LinearLayout resultContainer;
     private EditText textResult;
     private Button buttonCopy;
+    private Button buttonReset;
 
     /** Called when the activity is first created. */
     @Override
@@ -113,10 +114,11 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
             }
         });
 
-        // Copy-Button initialisieren
+        // Copy-Button und Reset-Button initialisieren
         resultContainer = (LinearLayout) findViewById(R.id.resultContainer);
         textResult = (EditText) findViewById(R.id.textResult);
         buttonCopy = (Button) findViewById(R.id.buttonCopy);
+        buttonReset = (Button) findViewById(R.id.buttonReset);
         
         buttonCopy.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -128,6 +130,24 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
                 
                 Toast.makeText(MainActivity.this, 
                     "Text in Zwischenablage kopiert!", Toast.LENGTH_SHORT).show();
+            }
+        });
+        
+        // Reset-Button: Versteckt das Ergebnis und ermöglicht neue Aufnahme
+        buttonReset.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Textfeld leeren
+                textResult.setText("");
+                
+                // Ergebnis-Container ausblenden
+                resultContainer.setVisibility(View.GONE);
+                
+                // Toast für Benutzerfeedback
+                Toast.makeText(MainActivity.this, 
+                    "Bereit für neue Aufnahme", Toast.LENGTH_SHORT).show();
+                
+                Log.d("OCR", "Reset-Button: Bereit für neue OCR");
             }
         });
 
