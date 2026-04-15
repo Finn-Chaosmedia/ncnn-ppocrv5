@@ -143,15 +143,25 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                 ncnn::MutexLockGuard textG(textLock);
                 g_lastOcrText = "";
                 
-                // Extract text from all objects (similar to draw function in ppocrv5.cpp)
-                for (size_t i = 0; i < objects.size(); i++)
+                // FIX: Sort objects by Y position (top to bottom)
+                // Current bug: Lines appear in reverse order (4,3,2,1 instead of 1,2,3,4)
+                std::vector<Object> sorted_objects = objects;
+                std::sort(sorted_objects.begin(), sorted_objects.end(),
+                    [](const Object& a, const Object& b) {
+                        // In image coordinates: Y=0 is TOP, larger Y is BOTTOM
+                        // For top-to-bottom reading: smaller Y (top) comes first
+                        return a.rrect.center.y < b.rrect.center.y;
+                    });
+                
+                // Extract text from sorted objects (top to bottom)
+                for (size_t i = 0; i < sorted_objects.size(); i++)
                 {
                     if (i > 0) g_lastOcrText += "\n";
                     
                     std::string text;
-                    for (size_t j = 0; j < objects[i].text.size(); j++)
+                    for (size_t j = 0; j < sorted_objects[i].text.size(); j++)
                     {
-                        const Character& ch = objects[i].text[j];
+                        const Character& ch = sorted_objects[i].text[j];
                         
                         // EXACTLY like in ppocrv5.cpp draw() function
                         if (ch.id >= character_dict_size)
