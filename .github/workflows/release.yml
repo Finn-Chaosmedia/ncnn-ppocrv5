@@ -1,0 +1,38 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up JDK
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'temurin'
+        java-version: '17'
+    
+    - name: Setup Android SDK
+      uses: android-actions/setup-android@v3
+    
+    - name: Download dependencies
+      run: |
+        wget https://github.com/Tencent/ncnn/releases/download/20250220/ncnn-20250220-android-vulkan.zip
+        unzip ncnn-20250220-android-vulkan.zip -d app/src/main/jni/
+        wget https://github.com/nihui/opencv-mobile/releases/download/24.10/opencv-mobile-24.10-android.zip
+        unzip opencv-mobile-24.10-android.zip -d app/src/main/jni/
+    
+    - name: Build release APK
+      run: ./gradlew assembleRelease
+    
+    - name: Create Release
+      uses: softprops/action-gh-release@v1
+      with:
+        files: app/build/outputs/apk/release/*.apk
+        generate_release_notes: true
