@@ -27,7 +27,7 @@
 #include <benchmark.h>
 
 #include "ppocrv5.h"
-#include "ppocrv5_dict.h"  // FIXED: Re-enabled character dictionary
+#include "ppocrv5_dict.h"  // For character_dict
 
 #include "ndkcamera.h"
 
@@ -142,7 +142,7 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                 ncnn::MutexLockGuard textG(textLock);
                 g_lastOcrText = "";
                 
-                // Extract text from all objects using character_dict
+                // Extract text from all objects (similar to draw function in ppocrv5.cpp)
                 for (size_t i = 0; i < objects.size(); i++)
                 {
                     if (i > 0) g_lastOcrText += "\n";
@@ -152,12 +152,14 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     {
                         const Character& ch = objects[i].text[j];
                         
-                        // Use character_dict to get actual character
-                        // Character IDs start from 1, dictionary index starts from 0
-                        if (ch.id > 0 && ch.id <= 6625) {
-                            text += character_dict[ch.id - 1];
-                        } else {
-                            text += "?";
+                        // Use character_dict like in ppocrv5.cpp draw() function
+                        if (ch.id > 0 && ch.id <= character_dict_size)
+                        {
+                            text += character_dict[ch.id - 1];  // IDs start from 1
+                        }
+                        else
+                        {
+                            text += "?";  // Unknown character
                         }
                     }
                     
@@ -208,21 +210,41 @@ JNIEXPORT void JNI_OnUnload(JavaVM* vm, void* reserved)
 {
     __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "JNI_OnUnload");
 
+    {
+        ncnn::MutexLockGuard g(lock);
+
+        delete g_ppocrv5;
+        g_ppocrv5 = 0;
+    }
+
     ncnn::destroy_gpu_instance();
 
     delete g_camera;
     g_camera = 0;
 }
 
-// public native boolean loadModel(AssetManager mgr, int modelid, int cpugpu, int sizeid);
-JNIEXPORT jboolean JNICALL Java_com_tencent_ppocrv5ncnn_PPOCRv5Ncnn_loadModel(JNIEnv* env, jobject thiz, jobject assetManager, jint modelid, jint cpugpu, jint sizeid)
+// public native boolean loadModel(AssetManager mgr, int modelid, int sizeid, int cpugpu);
+JNIEXPORT jboolean JNICALL Java_com_tencent_ppocrv5ncnn_PPOCRv5Ncnn_loadModel(JNIEnv* env, jobject thiz, jobject assetManager, jint modelid, jint sizeid, jint cpugpu)
 {
+    if (modelid < 0 || modelid > 1 || sizeid < 0 || sizeid > 4 || cpugpu < 0 || cpugpu > 2)
+    {
+        return JNI_FALSE;
+    }
+
     AAssetManager* mgr = AAssetManager_fromJava(env, assetManager);
 
-    __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "loadModel %p %d %d %d", mgr, modelid, cpugpu, sizeid);
+    __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "loadModel %p", mgr);
 
-    const char* modeltypes[] = {"server", "mobile"};
-    const int sizetypes[] = {
+    const char* modeltypes[2] =
+    {
+        "mobile",
+        "server"
+    };
+
+    const int sizetypes[5] =
+    {
+        320,
+        400,
         480,
         560,
         640
