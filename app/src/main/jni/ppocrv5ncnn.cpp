@@ -28,7 +28,7 @@
 
 #include "ppocrv5.h"
 #include "ppocrv5_dict.h"  // For character_dict
-#include "german_word_correction_simple.h"    // Simple German word correction
+#include "german_word_correction_aggressive.h"    // Aggressive German word correction
 
 #include "ndkcamera.h"
 
@@ -170,8 +170,16 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     
                     if (!text.empty())
                     {
-                        // Apply simple German word correction
-                        std::string corrected_text = correctGermanTextSimple(text);
+                        // DEBUG: Log what OCR recognized
+                        // __android_log_print(ANDROID_LOG_DEBUG, "OCR", "Raw OCR text: %s", text.c_str());
+                        
+                        // Apply aggressive German word correction
+                        std::string corrected_text = correctGermanTextAggressive(text);
+                        
+                        // DEBUG: Log corrected text
+                        if (corrected_text != text) {
+                            // __android_log_print(ANDROID_LOG_DEBUG, "OCR", "Corrected to: %s", corrected_text.c_str());
+                        }
                         
                         g_lastOcrText += corrected_text;
                     }
