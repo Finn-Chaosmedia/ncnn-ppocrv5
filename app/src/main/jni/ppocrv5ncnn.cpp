@@ -152,15 +152,19 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     {
                         const Character& ch = objects[i].text[j];
                         
-                        // Use character_dict like in ppocrv5.cpp draw() function
-                        if (ch.id > 0 && ch.id <= character_dict_size)
+                        // EXACTLY like in ppocrv5.cpp draw() function
+                        if (ch.id >= character_dict_size)
                         {
-                            text += character_dict[ch.id - 1];  // IDs start from 1
+                            // Skip invalid character (add space like draw() does)
+                            if (!text.empty() && text.back() != ' ')
+                            {
+                                text += " ";
+                            }
+                            continue;
                         }
-                        else
-                        {
-                            text += "?";  // Unknown character
-                        }
+                        
+                        // Add character (same as draw() function)
+                        text += character_dict[ch.id];
                     }
                     
                     if (!text.empty())
