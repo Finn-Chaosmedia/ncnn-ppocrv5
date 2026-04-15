@@ -34,6 +34,9 @@ import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
 import android.content.ClipboardManager;
 import android.content.ClipData;
+import android.content.Context;
+import android.widget.EditText;
+import android.widget.LinearLayout;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback
 {
