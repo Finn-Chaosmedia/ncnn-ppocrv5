@@ -28,6 +28,7 @@
 
 #include "ppocrv5.h"
 #include "ppocrv5_dict.h"  // For character_dict
+#include "german_word_correction.h"    // For German word correction
 
 #include "ndkcamera.h"
 
@@ -169,7 +170,13 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     
                     if (!text.empty())
                     {
-                        g_lastOcrText += text;
+                        // Apply European character correction
+                        std::string corrected_text = correctEuropeanText(text);
+                        
+                        // Apply German word correction
+                        corrected_text = correctGermanText(corrected_text);
+                        
+                        g_lastOcrText += corrected_text;
                     }
                 }
                 
