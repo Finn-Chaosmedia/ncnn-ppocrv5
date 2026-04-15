@@ -27,7 +27,7 @@
 #include <benchmark.h>
 
 #include "ppocrv5.h"
-#include "ppocrv5_dict.h"
+// #include "ppocrv5_dict.h"  // Temporarily commented out for testing
 
 #include "ndkcamera.h"
 
@@ -153,17 +153,21 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                         const Character& ch = objects[i].text[j];
                         
                         // Check if character id is valid
-                        if (ch.id >= 0 && ch.id < (int)(sizeof(character_dict)/sizeof(character_dict[0])))
-                        {
-                            // Add space before Chinese character if needed
-                            if (!text.empty() && text.back() != ' ' && 
-                                character_dict[ch.id][0] != ' ')
-                            {
-                                text += " ";
-                            }
-                            
-                            text += character_dict[ch.id];
-                        }
+                        // Temporarily commented out for testing
+                        // if (ch.id >= 0 && ch.id < (int)(sizeof(character_dict)/sizeof(character_dict[0])))
+                        // {
+                        //     // Add space before Chinese character if needed
+                        //     if (!text.empty() && text.back() != ' ' && 
+                        //         character_dict[ch.id][0] != ' ')
+                        //     {
+                        //         text += " ";
+                        //     }
+                        //     
+                        //     text += character_dict[ch.id];
+                        // }
+                        
+                        // TEMPORARY: Just store character ID
+                        text += "[char" + std::to_string(ch.id) + "]";
                     }
                     
                     if (!text.empty())
