@@ -78,12 +78,14 @@
             android:id="@+id/textResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:minHeight="100dp"
+            android:minHeight="200dp"
             android:scrollbars="vertical"
             android:inputType="textMultiLine"
             android:enabled="true"
             android:focusable="true"
             android:focusableInTouchMode="true"
+            android:textSize="16sp"
+            android:padding="8dp"
             android:text="Hier wird der erkannte Text angezeigt..." />
 
         <Button

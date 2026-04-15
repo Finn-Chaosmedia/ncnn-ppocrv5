@@ -24,7 +24,6 @@ public class PPOCRv5Ncnn
     public native boolean closeCamera();
     public native boolean setOutputWindow(Surface surface);
     public native String captureAndOCR();
-    public native String captureAndOCR();
 
     static {
         System.loadLibrary("ppocrv5ncnn");
