@@ -1,5 +1,6 @@
 // German word correction for PP-OCRv5
 // Improves recognition of German words with umlauts and special characters
+// Includes basic European character correction
 
 #ifndef GERMAN_WORD_CORRECTION_H
 #define GERMAN_WORD_CORRECTION_H
@@ -8,6 +9,36 @@
 #include <unordered_map>
 #include <vector>
 #include <algorithm>
+#include <cctype>
+
+// Basic European character corrections (common OCR misrecognitions)
+static std::string correctEuropeanCharacters(const std::string& input) {
+    std::string result = input;
+    
+    // Common OCR misrecognitions for European characters
+    const std::unordered_map<std::string, std::string> CHAR_CORRECTIONS = {
+        // Numbers vs Letters
+        {"0", "O"}, {"O", "0"},  // Zero vs Oh
+        {"1", "I"}, {"I", "1"},  // One vs Eye
+        {"5", "S"}, {"S", "5"},  // Five vs Ess
+        {"8", "B"}, {"B", "8"},  // Eight vs Bee
+        
+        // Common letter combinations that look like other letters
+        {"rn", "m"}, {"cl", "d"}, {"vv", "w"},
+        {"ii", "u"}, {"nn", "m"}, {"ci", "a"}
+    };
+    
+    // Apply character corrections
+    for (const auto& correction : CHAR_CORRECTIONS) {
+        size_t pos = 0;
+        while ((pos = result.find(correction.first, pos)) != std::string::npos) {
+            result.replace(pos, correction.first.length(), correction.second);
+            pos += correction.second.length();
+        }
+    }
+    
+    return result;
+}
 
 // Common German words that often get misrecognized by Chinese-trained OCR
 static const std::unordered_map<std::string, std::string> GERMAN_WORD_CORRECTIONS = {
@@ -143,10 +174,13 @@ static std::string correctGermanWord(const std::string& word) {
 static std::string correctGermanText(const std::string& text) {
     if (text.empty()) return text;
     
+    // First apply basic character corrections
+    std::string processed = correctEuropeanCharacters(text);
+    
     std::string result;
     std::string currentWord;
     
-    for (char c : text) {
+    for (char c : processed) {
         if (std::isalpha(c) || c == 'ä' || c == 'ö' || c == 'ü' || c == 'ß' ||
             c == 'Ä' || c == 'Ö' || c == 'Ü') {
             currentWord += c;

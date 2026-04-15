@@ -170,11 +170,8 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     
                     if (!text.empty())
                     {
-                        // Apply European character correction
-                        std::string corrected_text = correctEuropeanText(text);
-                        
-                        // Apply German word correction
-                        corrected_text = correctGermanText(corrected_text);
+                        // Apply German word correction (includes character correction)
+                        std::string corrected_text = correctGermanText(text);
                         
                         g_lastOcrText += corrected_text;
                     }
