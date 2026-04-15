@@ -27,6 +27,7 @@
 #include <benchmark.h>
 
 #include "ppocrv5.h"
+#include "ppocrv5_dict.h"
 
 #include "ndkcamera.h"
 
@@ -113,6 +114,10 @@ static int draw_fps(cv::Mat& rgb)
 static PPOCRv5* g_ppocrv5 = 0;
 static ncnn::Mutex lock;
 
+// Global variable to store last OCR text
+static std::string g_lastOcrText = "";
+static ncnn::Mutex textLock;
+
 class MyNdkCamera : public NdkCameraWindow
 {
 public:
@@ -131,10 +136,58 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
             g_ppocrv5->detect_and_recognize(rgb, objects);
 
             g_ppocrv5->draw(rgb, objects);
+            
+            // Store OCR text for later retrieval
+            {
+                ncnn::MutexLockGuard textG(textLock);
+                g_lastOcrText = "";
+                
+                // Extract text from all objects (similar to draw function in ppocrv5.cpp)
+                for (size_t i = 0; i < objects.size(); i++)
+                {
+                    if (i > 0) g_lastOcrText += "\n";
+                    
+                    std::string text;
+                    for (size_t j = 0; j < objects[i].text.size(); j++)
+                    {
+                        const Character& ch = objects[i].text[j];
+                        
+                        // Check if character id is valid
+                        if (ch.id >= 0 && ch.id < (int)(sizeof(character_dict)/sizeof(character_dict[0])))
+                        {
+                            // Add space before Chinese character if needed
+                            if (!text.empty() && text.back() != ' ' && 
+                                character_dict[ch.id][0] != ' ')
+                            {
+                                text += " ";
+                            }
+                            
+                            text += character_dict[ch.id];
+                        }
+                    }
+                    
+                    if (!text.empty())
+                    {
+                        g_lastOcrText += text;
+                    }
+                }
+                
+                // If no text detected, store placeholder
+                if (g_lastOcrText.empty())
+                {
+                    g_lastOcrText = "No text detected";
+                }
+            }
         }
         else
         {
             draw_unsupported(rgb);
+            
+            // Store error message
+            {
+                ncnn::MutexLockGuard textG(textLock);
+                g_lastOcrText = "OCR model not loaded";
+            }
         }
     }
 
@@ -281,6 +334,17 @@ JNIEXPORT jboolean JNICALL Java_com_tencent_ppocrv5ncnn_PPOCRv5Ncnn_setOutputWin
     g_camera->set_window(win);
 
     return JNI_TRUE;
+}
+
+// public native String captureAndOCR();
+JNIEXPORT jstring JNICALL Java_com_tencent_ppocrv5ncnn_PPOCRv5Ncnn_captureAndOCR(JNIEnv* env, jobject thiz)
+{
+    __android_log_print(ANDROID_LOG_DEBUG, "ncnn", "captureAndOCR called");
+    
+    ncnn::MutexLockGuard textG(textLock);
+    
+    // Return the last OCR text
+    return env->NewStringUTF(g_lastOcrText.c_str());
 }
 
 }

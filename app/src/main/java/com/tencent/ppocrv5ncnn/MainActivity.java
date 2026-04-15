@@ -91,27 +91,25 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
         buttonCapture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Einfache Log-Ausgabe für Phase 1
                 Log.d("OCR", "Foto-Button geklickt - OCR gestartet");
                 
-                // Hier später: OCR auf aktuellem Frame
-                // String result = ppocrv5ncnn.captureAndOCR();
-                // Log.d("OCR Result", result);
+                // Echte OCR aufrufen
+                String ocrResult = ppocrv5ncnn.captureAndOCR();
                 
-                // TEMPORÄR: Dummy-Text für Test
-                String dummyResult = "OCR Test-Ergebnis:\n" +
-                                    "Erkannte Zeilen:\n" +
-                                    "1. Dies ist ein Testtext\n" +
-                                    "2. 12345 Testnummer\n" +
-                                    "3. Weitere erkannte Zeile";
+                // Log Ergebnis
+                Log.d("OCR Result", "Erkannt: " + ocrResult);
                 
                 // Ergebnis anzeigen
-                textResult.setText(dummyResult);
+                if (ocrResult == null || ocrResult.isEmpty()) {
+                    ocrResult = "Kein Text erkannt. Bitte Kamera auf Text richten.";
+                }
+                
+                textResult.setText(ocrResult);
                 resultContainer.setVisibility(View.VISIBLE);
                 
                 // Toast für Benutzerfeedback
                 Toast.makeText(MainActivity.this, 
-                    "OCR gestartet - Ergebnis angezeigt", Toast.LENGTH_SHORT).show();
+                    "OCR abgeschlossen", Toast.LENGTH_SHORT).show();
             }
         });
 
