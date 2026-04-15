@@ -24,17 +24,19 @@
 
     </LinearLayout>
 
+    <!-- Size selection only (removed model and CPU/GPU selection) -->
     <LinearLayout
         android:orientation="horizontal"
         android:layout_width="fill_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:gravity="center">
 
-    <Spinner
-        android:id="@+id/spinnerModel"
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:entries="@array/model_array" />
+        android:text="Auflösung:"
+        android:textSize="14sp"
+        android:layout_marginEnd="8dp" />
 
     <Spinner
         android:id="@+id/spinnerSize"
@@ -42,13 +44,6 @@
         android:layout_height="wrap_content"
         android:drawSelectorOnTop="true"
         android:entries="@array/size_array" />
-
-    <Spinner
-        android:id="@+id/spinnerCPUGPU"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:drawSelectorOnTop="true"
-        android:entries="@array/cpugpu_array" />
 
     </LinearLayout>
 
