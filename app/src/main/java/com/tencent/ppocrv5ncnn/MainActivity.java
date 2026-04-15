@@ -31,6 +31,7 @@ import android.widget.Spinner;
 
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
+import android.widget.Toast;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback
 {
@@ -47,6 +48,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
     private int current_cpugpu = 0;
 
     private SurfaceView cameraView;
+    private Button buttonCapture;
 
     /** Called when the activity is first created. */
     @Override
@@ -74,6 +76,23 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
                 ppocrv5ncnn.openCamera(new_facing);
 
                 facing = new_facing;
+            }
+        });
+
+        buttonCapture = (Button) findViewById(R.id.buttonCapture);
+        buttonCapture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Einfache Log-Ausgabe für Phase 1
+                Log.d("OCR", "Foto-Button geklickt - OCR gestartet");
+                
+                // Hier später: OCR auf aktuellem Frame
+                // String result = ppocrv5ncnn.captureAndOCR();
+                // Log.d("OCR Result", result);
+                
+                // Toast für Benutzerfeedback
+                Toast.makeText(MainActivity.this, 
+                    "OCR gestartet (siehe Logcat für Details)", Toast.LENGTH_SHORT).show();
             }
         });
 
