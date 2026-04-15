@@ -1,17 +1,14 @@
-# ncnn-android-ppocrv5
+# OCR Scanner - ncnn-pp
 
-![download](https://img.shields.io/github/downloads/nihui/ncnn-android-ppocrv5/total.svg)
 
-PPOCRv5
+PP OCRv5
 
-This is a sample ncnn android project, it depends on ncnn library and opencv
+This is a sample ncnn  project, it depends on ncnn library and opencv
 
 https://github.com/Tencent/ncnn
 
-https://github.com/nihui/opencv-mobile
-
 ## android apk file download
-https://github.com/nihui/ncnn-android-ppocrv5/releases/latest
+https://github.com/Finn-Chaosmedia/ncnn-ppocrv5/releases/latest
 
 ## how to build and run
 ### step1
@@ -36,9 +33,6 @@ https://github.com/nihui/opencv-mobile
 * Most small models run slower on GPU than on CPU, this is common
 * FPS may be lower in dark environment because of longer camera exposure time
 
-## screenshot
-![](screenshot0.jpg)
-![](screenshot1.jpg)
 
 ## guidelines for converting PPOCRv5 models
 
