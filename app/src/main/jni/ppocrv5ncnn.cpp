@@ -28,7 +28,7 @@
 
 #include "ppocrv5.h"
 #include "ppocrv5_dict.h"  // For character_dict
-#include "german_word_correction.h"    // For German word correction
+#include "german_word_correction_simple.h"    // Simple German word correction
 
 #include "ndkcamera.h"
 
@@ -170,8 +170,8 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                     
                     if (!text.empty())
                     {
-                        // Apply German word correction (includes character correction)
-                        std::string corrected_text = correctGermanText(text);
+                        // Apply simple German word correction
+                        std::string corrected_text = correctGermanTextSimple(text);
                         
                         g_lastOcrText += corrected_text;
                     }
