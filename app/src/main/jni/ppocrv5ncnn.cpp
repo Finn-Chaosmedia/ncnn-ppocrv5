@@ -164,18 +164,17 @@ void MyNdkCamera::on_image_render(cv::Mat& rgb) const
                         const Character& ch = sorted_objects[i].text[j];
                         
                         // EXACTLY like in ppocrv5.cpp draw() function
-                        if (ch.id >= character_dict_size)
+                        // TEST VERSION: Show what's really happening
+                        if (ch.id < character_dict_size && ch.id >= 0)
                         {
-                            // Skip invalid character (add space like draw() does)
-                            if (!text.empty() && text.back() != ' ')
-                            {
-                                text += " ";
-                            }
-                            continue;
+                            // Valid character - show it
+                            text += character_dict[ch.id];
                         }
-                        
-                        // Add character (same as draw() function)
-                        text += character_dict[ch.id];
+                        else
+                        {
+                            // Invalid character - show placeholder with ID
+                            text += "[ID:" + std::to_string(ch.id) + "]";
+                        }
                     }
                     
                     if (!text.empty())
