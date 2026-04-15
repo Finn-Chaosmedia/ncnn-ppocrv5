@@ -43,7 +43,7 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
     public static final int REQUEST_CAMERA = 100;
 
     private PPOCRv5Ncnn ppocrv5ncnn = new PPOCRv5Ncnn();
-    private int facing = 0;
+    private int facing = 1;  // Start with back camera (1) instead of front camera (0)
 
     private Spinner spinnerModel;
     private Spinner spinnerSize;
