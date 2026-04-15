@@ -46,9 +46,10 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
     private int facing = 1;  // Start with back camera (1) instead of front camera (0)
 
     private Spinner spinnerSize;
-    private int current_model = 0;  // Always use mobile model (0)
-    private int current_size = 1;   // Default to 400 (index 1) for best results
-    private int current_cpugpu = 0; // Always use CPU (0)
+    // Fixed values (UI removed but needed for loadModel)
+    private final int current_model = 0;   // Always use mobile model
+    private int current_size = 1;          // Default to 400 (index 1) for best results
+    private final int current_cpugpu = 0;  // Always use CPU
 
     private SurfaceView cameraView;
     private Button buttonCapture;
