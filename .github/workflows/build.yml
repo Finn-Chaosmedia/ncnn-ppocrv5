@@ -20,15 +20,15 @@ jobs:
     
     - name: Download ncnn
       run: |
-        wget https://github.com/Tencent/ncnn/releases/download/20250220/ncnn-20250220-android-vulkan.zip
-        unzip ncnn-20250220-android-vulkan.zip -d app/src/main/jni/
-        echo "ncnn_DIR set to: $(pwd)/app/src/main/jni/ncnn-20250220-android-vulkan"
+        wget https://github.com/Tencent/ncnn/releases/download/20260113/ncnn-20260113-android-vulkan.zip
+        unzip ncnn-20260113-android-vulkan.zip -d app/src/main/jni/
+        echo "ncnn_DIR set to: $(pwd)/app/src/main/jni/ncnn-20260113-android-vulkan"
     
     - name: Download OpenCV Mobile
       run: |
-        wget https://github.com/nihui/opencv-mobile/releases/download/24.10/opencv-mobile-24.10-android.zip
-        unzip opencv-mobile-24.10-android.zip -d app/src/main/jni/
-        echo "OpenCV_DIR set to: $(pwd)/app/src/main/jni/opencv-mobile-24.10-android"
+        wget https://github.com/nihui/opencv-mobile/releases/download/v35/opencv-mobile-4.13.0-android.zip
+        unzip opencv-mobile-4.13.0-android.zip -d app/src/main/jni/
+        echo "OpenCV_DIR set to: $(pwd)/app/src/main/jni/opencv-mobile-4.13.0-android"
     
     - name: Update CMakeLists.txt paths
       run: |
@@ -36,8 +36,8 @@ jobs:
         # Backup original
         cp CMakeLists.txt CMakeLists.txt.backup
         # Update paths
-        sed -i 's|/path/to/opencv-mobile-24.10-android|${CMAKE_CURRENT_SOURCE_DIR}/opencv-mobile-24.10-android|g' CMakeLists.txt
-        sed -i 's|/path/to/ncnn-20250220-android-vulkan|${CMAKE_CURRENT_SOURCE_DIR}/ncnn-20250220-android-vulkan|g' CMakeLists.txt
+        sed -i 's|/path/to/opencv-mobile-24.10-android|${CMAKE_CURRENT_SOURCE_DIR}/opencv-mobile-4.13.0-android|g' CMakeLists.txt
+        sed -i 's|/path/to/ncnn-20250220-android-vulkan|${CMAKE_CURRENT_SOURCE_DIR}/ncnn-20260113-android-vulkan|g' CMakeLists.txt
     
     - name: Grant execute permission for gradlew
       run: chmod +x gradlew
