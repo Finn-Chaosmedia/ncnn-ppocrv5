@@ -26,9 +26,9 @@ jobs:
     
     - name: Download OpenCV Mobile
       run: |
-        wget https://github.com/nihui/opencv-mobile/releases/download/v35/opencv-mobile-4.13.0-android.zip
-        unzip opencv-mobile-4.13.0-android.zip -d app/src/main/jni/
-        echo "OpenCV_DIR set to: $(pwd)/app/src/main/jni/opencv-mobile-4.13.0-android"
+        wget https://github.com/nihui/opencv-mobile/releases/download/v35/opencv-mobile-3.4.20-android.zip
+        unzip opencv-mobile-3.4.20-android.zip -d app/src/main/jni/
+        echo "OpenCV_DIR set to: $(pwd)/app/src/main/jni/opencv-mobile-3.4.20-android"
     
     - name: Update CMakeLists.txt paths
       run: |
@@ -36,7 +36,7 @@ jobs:
         # Backup original
         cp CMakeLists.txt CMakeLists.txt.backup
         # Update paths
-        sed -i 's|/path/to/opencv-mobile-24.10-android|${CMAKE_CURRENT_SOURCE_DIR}/opencv-mobile-4.13.0-android|g' CMakeLists.txt
+        sed -i 's|/path/to/opencv-mobile-24.10-android|${CMAKE_CURRENT_SOURCE_DIR}/opencv-mobile-3.4.20-android|g' CMakeLists.txt
         sed -i 's|/path/to/ncnn-20250220-android-vulkan|${CMAKE_CURRENT_SOURCE_DIR}/ncnn-20260113-android-vulkan|g' CMakeLists.txt
     
     - name: Grant execute permission for gradlew
