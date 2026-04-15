@@ -1,0 +1,3 @@
+Einfaches Brillanten-Icon für OCR Scanner
+Größe: 96x96
+Farben: Blau (#007AFF) mit weißen Scanner-Strahlen

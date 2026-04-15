@@ -32,6 +32,8 @@ import android.widget.Spinner;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.widget.Toast;
+import android.content.ClipboardManager;
+import android.content.ClipData;
 
 public class MainActivity extends Activity implements SurfaceHolder.Callback
 {
@@ -49,6 +51,9 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
 
     private SurfaceView cameraView;
     private Button buttonCapture;
+    private LinearLayout resultContainer;
+    private EditText textResult;
+    private Button buttonCopy;
 
     /** Called when the activity is first created. */
     @Override
@@ -90,9 +95,38 @@ public class MainActivity extends Activity implements SurfaceHolder.Callback
                 // String result = ppocrv5ncnn.captureAndOCR();
                 // Log.d("OCR Result", result);
                 
+                // TEMPORÄR: Dummy-Text für Test
+                String dummyResult = "OCR Test-Ergebnis:\n" +
+                                    "Erkannte Zeilen:\n" +
+                                    "1. Dies ist ein Testtext\n" +
+                                    "2. 12345 Testnummer\n" +
+                                    "3. Weitere erkannte Zeile";
+                
+                // Ergebnis anzeigen
+                textResult.setText(dummyResult);
+                resultContainer.setVisibility(View.VISIBLE);
+                
                 // Toast für Benutzerfeedback
                 Toast.makeText(MainActivity.this, 
-                    "OCR gestartet (siehe Logcat für Details)", Toast.LENGTH_SHORT).show();
+                    "OCR gestartet - Ergebnis angezeigt", Toast.LENGTH_SHORT).show();
+            }
+        });
+
+        // Copy-Button initialisieren
+        resultContainer = (LinearLayout) findViewById(R.id.resultContainer);
+        textResult = (EditText) findViewById(R.id.textResult);
+        buttonCopy = (Button) findViewById(R.id.buttonCopy);
+        
+        buttonCopy.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // Text in Zwischenablage kopieren
+                ClipboardManager clipboard = (ClipboardManager) getSystemService(Context.CLIPBOARD_SERVICE);
+                ClipData clip = ClipData.newPlainText("OCR Result", textResult.getText().toString());
+                clipboard.setPrimaryClip(clip);
+                
+                Toast.makeText(MainActivity.this, 
+                    "Text in Zwischenablage kopiert!", Toast.LENGTH_SHORT).show();
             }
         });
 
